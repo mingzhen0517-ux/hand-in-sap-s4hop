@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CleanCoreDesignResult",
+  "type": "object",
+  "required": ["agent_id", "status", "clean_core_tier", "data_model", "interfaces", "artifacts_created", "notes"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "design-agent"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["COMPLETED", "BLOCKED", "FAILED"]
+    },
+    "blocked_reason": {
+      "type": "string",
+      "description": "当 status 为 BLOCKED 时必填，说明阻塞的具体原因及缺失的依赖"
+    },
+    "clean_core_tier": {
+      "type": "string",
+      "enum": ["Tier1_ABAP_Cloud", "Tier2_Custom_Adapter", "Tier3_BTP_SideBySide", "Hybrid"]
+    },
+    "tier_justification": {
+      "type": "string",
+      "description": "分层判定的技术合规理由"
+    },
+    "data_model": {
+      "type": "object",
+      "required": ["entities"],
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type", "description"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string", "enum": ["CDS_VIEW_ENTITY", "TABLE", "STRUCTURE"] },
+              "base_sources": { "type": "array", "items": { "type": "string" } },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "kind", "contract_summary"],
+        "properties": {
+          "name": { "type": "string" },
+          "kind": { "type": "string", "enum": ["RAP_BEHAVIOR", "ODATA_V4", "OO_INTERFACE", "SERVICE_DEFINITION"] },
+          "contract_summary": { "type": "string" }
+        }
+      }
+    },
+    "artifacts_created": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "已写入的设计规约文件路径列表（仅限 docs/design/**）"
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

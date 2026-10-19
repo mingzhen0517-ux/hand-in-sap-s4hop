@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "design-agent",
+  "name": "SAP Clean Core Solution Architect",
+  "version": "1.0.0",
+  "description": "Clean Core 方案架构与模型规约设计子代理，负责需求分析、扩展分层判定 (Tier 1/2/3)、CDS 实体分层与服务接口契约设计。",
+  "mode": "read-only-workspace",
+  "execution": {
+    "max_retries": 3,
+    "timeout_seconds": 180,
+    "model_tier_preference": "inherited"
+  },
+  "write_scope": {
+    "allowed_paths": [
+      "docs/design/**"
+    ],
+    "disjoint_policy": "strict",
+    "allow_git_commands": false,
+    "allow_destructive_commands": false
+  },
+  "mcp_tools": {
+    "allowed": [
+      "sap.repository.search",
+      "sap.repository.inspect",
+      "sap.repository.resolve",
+      "sap.source.read",
+      "sap.system.inspect",
+      "sap.system.capabilities"
+    ],
+    "forbidden": [
+      "sap.capability.invoke_destructive",
+      "sap.capability.invoke_write"
+    ]
+  },
+  "files": {
+    "system_instructions": "system.md",
+    "prompt_template": "prompt.md",
+    "output_schema": "schema.json",
+    "output_contract": "contract.md"
+  }
+}

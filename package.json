@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Project-local SAP S/4HANA ABAP ADT MCP integration",
   "scripts": {
-    "check": "node --check scripts/sap-mcp-runner.mjs && node --check scripts/mcp-smoke-test.mjs && npm run mcp:smoke",
+    "check": "node --check scripts/sap-mcp-runner.mjs && node --check scripts/mcp-smoke-test.mjs && node --check scripts/agents/validate-agent-schemas.mjs && npm run agents:validate && npm run mcp:smoke",
+    "agents:validate": "node scripts/agents/validate-agent-schemas.mjs",
     "mcp:start": "node scripts/sap-mcp-runner.mjs serve --profile S4H100 --preset adaptive --audit-log stderr",
     "mcp:doctor": "node scripts/sap-mcp-runner.mjs doctor S4H100",
     "mcp:smoke": "node scripts/mcp-smoke-test.mjs"

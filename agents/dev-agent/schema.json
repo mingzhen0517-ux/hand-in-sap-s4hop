@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CleanCoreDevResult",
+  "type": "object",
+  "required": ["agent_id", "status", "files_modified", "syntax_diagnosis", "clean_core_compliance", "retry_count", "notes"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "dev-agent"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["COMPLETED", "BLOCKED", "FAILED"]
+    },
+    "blocked_reason": {
+      "type": "string",
+      "description": "当 status 为 BLOCKED 时必填，说明阻塞原因或诊断失败详情"
+    },
+    "files_modified": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "修改或创建的文件路径列表（严格限制在 src/**）"
+    },
+    "syntax_diagnosis": {
+      "type": "object",
+      "required": ["passed", "error_count", "warning_count"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "error_count": { "type": "integer" },
+        "warning_count": { "type": "integer" },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "line": { "type": "integer" },
+              "column": { "type": "integer" },
+              "severity": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "clean_core_compliance": {
+      "type": "object",
+      "required": ["modern_syntax_used", "deprecated_features_detected"],
+      "properties": {
+        "modern_syntax_used": { "type": "boolean" },
+        "deprecated_features_detected": { "type": "boolean" },
+        "tier_adaptation_used": { "type": "string" }
+      }
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "test-agent",
+  "name": "SAP Clean Core Quality & Test Specialist",
+  "version": "1.0.0",
+  "description": "Clean Core 质量保证、全系统 Where-Used 影响分析与 ABAP Unit 自动化测试实施子代理。",
+  "mode": "disjoint-workspace-write",
+  "execution": {
+    "max_retries": 3,
+    "timeout_seconds": 240,
+    "model_tier_preference": "inherited"
+  },
+  "write_scope": {
+    "allowed_paths": [
+      "tests/**",
+      "docs/qa/**"
+    ],
+    "disjoint_policy": "strict",
+    "allow_git_commands": false,
+    "allow_destructive_commands": false
+  },
+  "mcp_tools": {
+    "allowed": [
+      "sap.repository.where_used",
+      "sap.source.diagnose",
+      "sap.source.read",
+      "sap.source.search",
+      "sap.system.inspect"
+    ],
+    "forbidden": [
+      "sap.capability.invoke_destructive"
+    ]
+  },
+  "files": {
+    "system_instructions": "system.md",
+    "prompt_template": "prompt.md",
+    "output_schema": "schema.json",
+    "output_contract": "contract.md"
+  }
+}

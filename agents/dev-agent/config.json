@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "dev-agent",
+  "name": "SAP ABAP Cloud Developer",
+  "version": "1.0.0",
+  "description": "现代 SAP ABAP Cloud 与 CDS 视图编写实施子代理，负责代码实现与利用 MCP 远端编译器实施秒级诊断排错闭环。",
+  "mode": "disjoint-workspace-write",
+  "execution": {
+    "max_retries": 3,
+    "timeout_seconds": 300,
+    "model_tier_preference": "inherited"
+  },
+  "write_scope": {
+    "allowed_paths": [
+      "src/**"
+    ],
+    "disjoint_policy": "strict",
+    "allow_git_commands": false,
+    "allow_destructive_commands": false
+  },
+  "mcp_tools": {
+    "allowed": [
+      "sap.source.diagnose",
+      "sap.source.read",
+      "sap.source.search",
+      "sap.semantic.complete",
+      "sap.semantic.definition",
+      "sap.repository.inspect",
+      "sap.repository.search"
+    ],
+    "forbidden": [
+      "sap.capability.invoke_destructive"
+    ]
+  },
+  "files": {
+    "system_instructions": "system.md",
+    "prompt_template": "prompt.md",
+    "output_schema": "schema.json",
+    "output_contract": "contract.md"
+  }
+}

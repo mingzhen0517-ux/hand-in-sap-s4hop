@@ -2,7 +2,14 @@
 
 SAP S/4HANA (ABAP ADT) 项目本地 MCP (Model Context Protocol) 集成环境。通过标准化 MCP 协议为 AI 编码助手（如 Codex、Claude 等）无缝连接 SAP 底层系统，打破传统 SAP GUI (SE38/SE80) 与 Eclipse ADT 的重度仪式感与割裂体验。
 
-本项目以 **“Vibe Coding（心流化编码）”** 为核心设计理念，构建 **“意图感知 ➔ 自动查表/读码 ➔ 动态生成 ➔ 远端编译器实时诊断 ➔ 受控部署验证”** 的极速闭环。开发者只需在自然语言交互中表达业务需求，AI 即可在秒级内完成 SAP 底层元数据发现、代码编写、在线语法编译排错与结果交付，实现开发、修改、部署、验证一体化。
+本项目以 **“Vibe Coding（心流化编码）”** 为核心体验，深度融合 **SAP Best Practice** 与 **Clean Core 现代化架构原则**。通过标准化 MCP 协议直连 SAP 底层 ADT，构建 **“意图感知 ➔ 自动查表/读码 ➔ 动态生成 ➔ 远端编译器实时诊断 ➔ 受控部署验证”** 的极速闭环。
+
+针对企业级 SAP 开发的高合规、高内聚、易升级要求，本项目原生注入了 **SAP Clean Core 三大专业声明式 Sub-Agent（设计、开发、测试）**，采用业界前沿的 **“声明式配置 + 指令文档 + 辅助脚本”** 结构构建，建立覆盖架构规划、云就绪编码到质量审查的端到端协作流水线：
+- 🏛️ **设计 Agent (Design Agent)**：以只读探查系统元数据为基准，严格遵循 Clean Core 扩展分层（Tier 1 ABAP Cloud / Tier 2 适配层隔离 / Tier 3 BTP 并行），规划 CDS View Entity 虚拟数据模型 (VDM) 与服务契约，输出标准化设计方案，杜绝核心侵入式修改。写权限严格限制在 `docs/design/**`。
+- 💻 **开发 Agent (Dev Agent)**：采用现代面向对象 ABAP 与 CDS 实体建模，坚决摒弃过时过程式语法，联动 MCP 工具实时进行内核语法诊断（`sap.source.diagnose`）与即时排错，设定 3 次修复重试上限与熔断机制，实现秒级高品质编码。写权限严格限制在 `src/**`。
+- 🧪 **测试 Agent (Test Agent)**：执行全系统 Where-Used 影响范围分析、Clean Core 依赖合规审查，并自动构建基于 Test Double 解耦隔离的现代化 ABAP Unit 单元测试类，确保零缺陷与平滑升级。写权限严格限制在 `tests/**` 与 `docs/qa/**`。
+
+> **🔒 严密工程防线**：三大子代理均配备完整的 `config.json`、`system.md`（定义禁区与边界）、`prompt.md`（精简输入切片）、`schema.json` & `contract.md`（零废话确定性 JSON 输出契约），并通过 `npm run agents:validate` 实施互斥写作用域（Disjoint Write Sets）物理隔离，彻底杜绝写冲突与上下文污染。
 
 ---
 
@@ -10,6 +17,10 @@ SAP S/4HANA (ABAP ADT) 项目本地 MCP (Model Context Protocol) 集成环境。
 
 - [环境与连接验证结论](#环境与连接验证结论)
 - [可实现的核心功能](#可实现的核心功能)
+- [SAP Clean Core & Best Practice 多 Agent 协同体系](#sap-clean-core--best-practice-多-agent-协同体系)
+  - [为什么需要在 SAP 中坚持 Clean Core？](#为什么需要在-sap-中坚持-clean-core)
+  - [三大 Sub-Agent 角色矩阵与职责分工](#三大-sub-agent-角色矩阵与职责分工)
+  - [端到端协同闭环流水线](#端到端协同闭环流水线)
 - [AI 驱动的 Vibe Coding：极速开发与部署验证一体化](#ai-驱动的-vibe-coding极速开发与部署验证一体化)
   - [什么是 SAP ABAP 的 Vibe Coding？](#什么是-sap-abap-的-vibe-coding)
   - [一体化闭环工作流 (Read -> Edit -> Diagnose -> Deploy -> Verify)](#一体化闭环工作流-read---edit---diagnose---deploy---verify)
@@ -65,6 +76,76 @@ SAP S/4HANA (ABAP ADT) 项目本地 MCP (Model Context Protocol) 集成环境。
 目前服务器使用自签名证书或未绑定指定公网 IP 域名，浏览器访问会提示“证书不受信任”。本项目启动脚本在子进程中配置了证书安全规避（仅限当前进程有效），不影响系统其它全局环境。
 
 ---
+
+
+
+---
+
+## SAP Clean Core & Best Practice 多 Agent 协同体系
+
+### 为什么需要在 SAP 中坚持 Clean Core？
+在传统的 SAP ECC 或早期的 S/4HANA 定制开发中，大量项目习惯于在标准代码中打断点、插入隐式增强 (Implicit Enhancement)、滥用传统透明表与未经释放的系统底层函数。这直接导致系统升级时面临成百上千处语法冲突与业务逻辑中断，成为沉重的“技术负债”。
+
+**SAP Clean Core 最佳实践**要求实现：
+1. **核心零修改 (Zero Modification Core)**：标准代码完全不动。
+2. **现代化分层扩展架构**：
+   - **Tier 1 (ABAP Cloud On-Stack)**：利用 Released APIs、Released CDS Views 进行云就绪就地扩展。
+   - **Tier 2 (Custom Isolation Layer)**：对不可避免的未释放底层调用通过 Adapter 类进行严格隔离并建立重构清单。
+   - **Tier 3 (Side-by-Side on SAP BTP)**：外围交互、重分析与事件驱动场景下沉到云端微服务。
+3. **现代数据与业务建模**：全面拥抱 CDS View Entities、VDM 虚拟数据模型与 RAP (RESTful Application Programming Model)。
+
+---
+
+### 三大 Sub-Agent 角色矩阵与职责分工
+
+本项目在 `agents/` 目录及全局 `AGENTS.md` 中完整定义了三大 Clean Core 专职 Sub-Agent，AI 助手在处理任务时可根据角色进行分工协作：
+
+| Sub-Agent | 指南与定义路径 | 核心定位与职责 | 依托 MCP 核心工具面 |
+| :--- | :--- | :--- | :--- |
+| **设计 Agent**<br>*(Design Agent)* | [`agents/design-agent/AGENT.md`](agents/design-agent/AGENT.md) | **架构设计与合规把关**：负责需求可行性评估、Clean Core 扩展性分层定级 (Tier 1/2/3)、CDS 实体分层规划 (Basic/Composite/Consumption) 与接口契约定义，杜绝侵入式设计。 | `sap.repository.search`<br>`sap.repository.inspect`<br>`sap.source.read`<br>`sap.system.inspect` |
+| **开发 Agent**<br>*(Dev Agent)* | [`agents/dev-agent/AGENT.md`](agents/dev-agent/AGENT.md) | **现代 ABAP Cloud 编码专家**：遵循 ABAP Cloud 现代规范编码（严禁 FORM/TABLES 等旧语法），下沉复杂查询至 CDS 实体，编写业务类与 RAP 行为，调用 SAP 编译器秒级排错。 | `sap.source.diagnose`<br>`sap.source.read`<br>`sap.semantic.complete`<br>`sap.semantic.definition` |
+| **测试 Agent**<br>*(Test Agent)* | [`agents/test-agent/AGENT.md`](agents/test-agent/AGENT.md) | **质量保证与影响分析专家**：执行全系统 Where-Used 依赖与影响面追溯，审查 Clean Core API 释放合规性，设计高覆盖度的 ABAP Unit 本地测试类并集成 Test Double 隔离。 | `sap.repository.where_used`<br>`sap.source.diagnose`<br>`sap.source.search`<br>`sap.system.inspect` |
+
+---
+
+### 端到端协同闭环流水线
+
+三个 Agent 相互配合，形成从需求输入到高品质交付的 Clean Core 研发闭环：
+
+```text
+                 ┌─────────────────────────────────────────────────────────────┐
+                 │                      业务需求 / 变更提出                    │
+                 └──────────────────────────────┬──────────────────────────────┘
+                                                │
+                                                ▼
+  ┌─────────────────────────────────────────────────────────────────────────────────────────┐
+  │ 🏛️ 设计 Agent (Design Agent)                                                            │
+  │ • 调用 sap.repository.inspect / sap.repository.search 探查系统现有表与标准 CDS           │
+  │ • 确定扩展分层（Tier 1 云就绪 / Tier 2 隔离适配层）                                      │
+  │ • 产出《SAP Clean Core 技术方案设计书》（定义 CDS View Entities 层次与 RAP 行为契约）    │
+  └─────────────────────────────────────────────┬───────────────────────────────────────────┘
+                                                │
+                                                ▼
+  ┌─────────────────────────────────────────────────────────────────────────────────────────┐
+  │ 💻 开发 Agent (Dev Agent)                                                               │
+  │ • 依据设计书编写现代 OO ABAP 类与 CDS View Entities                                    │
+  │ • 杜绝 SELECT *，全面使用 @ 主机变量、内联声明与表达式                                   │
+  │ • 实时触发 sap.source.diagnose 进行内核语法编译诊断，循环修复至 0 Warning / 0 Error      │
+  └─────────────────────────────────────────────┬───────────────────────────────────────────┘
+                                                │
+                                                ▼
+  ┌─────────────────────────────────────────────────────────────────────────────────────────┐
+  │ 🧪 测试 Agent (Test Agent)                                                              │
+  │ • 调用 sap.repository.where_used 扫描全系统被影响程序与对象                             │
+  │ • 编写现代化 ABAP Unit 自动化单元测试套件（使用 Test Double 模拟数据库与接口隔离）        │
+  │ • 执行 Clean Core 释放 API 与代码质量合规审查，输出《质量测试与合规审查报告》           │
+  └─────────────────────────────────────────────┬───────────────────────────────────────────┘
+                                                │
+                                                ▼
+                 ┌─────────────────────────────────────────────────────────────┐
+                 │                100% 符合 Clean Core 的云就绪交付            │
+                 └─────────────────────────────────────────────────────────────┘
+```
 
 ## 可实现的核心功能
 

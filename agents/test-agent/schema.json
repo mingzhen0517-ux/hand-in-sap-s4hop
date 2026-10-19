@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CleanCoreTestResult",
+  "type": "object",
+  "required": ["agent_id", "status", "clean_core_compliance", "impact_analysis", "unit_tests", "defects_identified", "retry_count", "notes"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "test-agent"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["COMPLETED", "BLOCKED", "FAILED"]
+    },
+    "blocked_reason": {
+      "type": "string",
+      "description": "当 status 为 BLOCKED 时必填，说明阻塞原因"
+    },
+    "clean_core_compliance": {
+      "type": "object",
+      "required": ["passed", "unreleased_apis_found", "tier_level_verified"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "unreleased_apis_found": { "type": "array", "items": { "type": "string" } },
+        "tier_level_verified": { "type": "string" }
+      }
+    },
+    "impact_analysis": {
+      "type": "object",
+      "required": ["total_callers_found", "high_risk_callers"],
+      "properties": {
+        "total_callers_found": { "type": "integer" },
+        "high_risk_callers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "unit_tests": {
+      "type": "object",
+      "required": ["test_files_created", "syntax_passed"],
+      "properties": {
+        "test_files_created": { "type": "array", "items": { "type": "string" } },
+        "syntax_passed": { "type": "boolean" }
+      }
+    },
+    "defects_identified": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "title", "description"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["P0", "P1", "P2", "P3"] },
+          "title": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
