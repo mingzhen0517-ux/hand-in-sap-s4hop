@@ -1,6 +1,8 @@
 # hand-in-sap-s4hop
 
-SAP S/4HANA (ABAP ADT) 项目本地 MCP (Model Context Protocol) 集成环境。通过标准化 MCP 协议为 AI 编码助手（如 Codex、Claude 等）提供对 SAP 系统的只读检查、代码检索、源码分析、语法诊断与受控开发能力。
+SAP S/4HANA (ABAP ADT) 项目本地 MCP (Model Context Protocol) 集成环境。通过标准化 MCP 协议为 AI 编码助手（如 Codex、Claude 等）无缝连接 SAP 底层系统，打破传统 SAP GUI (SE38/SE80) 与 Eclipse ADT 的重度仪式感与割裂体验。
+
+本项目以 **“Vibe Coding（心流化编码）”** 为核心设计理念，构建 **“意图感知 ➔ 自动查表/读码 ➔ 动态生成 ➔ 远端编译器实时诊断 ➔ 受控部署验证”** 的极速闭环。开发者只需在自然语言交互中表达业务需求，AI 即可在秒级内完成 SAP 底层元数据发现、代码编写、在线语法编译排错与结果交付，实现开发、修改、部署、验证一体化。
 
 ---
 
