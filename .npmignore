@@ -1,0 +1,8 @@
+# Never include local SAP credentials or generated profiles in package archives.
+SAP_CONNECTION.local.md
+.sap-abap-mcp/
+
+# Local client configuration and generated dependencies.
+.codex/
+node_modules/
+*.log

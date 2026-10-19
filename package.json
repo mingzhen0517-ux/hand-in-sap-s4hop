@@ -1,0 +1,20 @@
+{
+  "name": "hand-in-sap-s4hop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Project-local SAP S/4HANA ABAP ADT MCP integration",
+  "scripts": {
+    "check": "node --check scripts/sap-mcp-runner.mjs && node --check scripts/mcp-smoke-test.mjs && npm run mcp:smoke",
+    "mcp:start": "node scripts/sap-mcp-runner.mjs serve --profile S4H100 --preset adaptive --audit-log stderr",
+    "mcp:doctor": "node scripts/sap-mcp-runner.mjs doctor S4H100",
+    "mcp:smoke": "node scripts/mcp-smoke-test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@coaspe/sap-abap-mcp": "1.6.0",
+    "@modelcontextprotocol/sdk": "1.30.0"
+  }
+}

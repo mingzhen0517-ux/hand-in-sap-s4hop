@@ -1,2 +1,12 @@
 # Local files containing credentials
 SAP_CONNECTION.local.md
+
+# Project-local SAP MCP runtime state
+.sap-abap-mcp/
+
+# Node.js dependencies and logs
+node_modules/
+*.log
+
+# OS
+.DS_Store

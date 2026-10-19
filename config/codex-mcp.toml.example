@@ -1,0 +1,15 @@
+[mcp_servers.sap_abap]
+command = "/opt/homebrew/bin/node"
+args = [
+  "/Users/mz/Documents/ChatGPT/hand-in-sap-s4hop/scripts/sap-mcp-runner.mjs",
+  "serve",
+  "--profile",
+  "S4H100",
+  "--preset",
+  "adaptive",
+  "--audit-log",
+  "stderr",
+]
+cwd = "/Users/mz/Documents/ChatGPT/hand-in-sap-s4hop"
+startup_timeout_sec = 120
+tool_timeout_sec = 180
